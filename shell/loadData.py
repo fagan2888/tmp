@@ -39,11 +39,14 @@ class load:
         baseDf = pd.read_sql(s,db)
         baseDf.sort_values(by = ['created_at'], ascending = False, inplace = True)
         baseDf.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
+        baseDf.sort_values(by = ['cc_uid','cc_age'], ascending = True, inplace = True)
         
-#        baseDf.sort_values(by = ['cc_age'], ascending = True, inplace = True )
-#        baseDf.drop_duplicates(subset = ['cc_uid'], keep = 'first', inplace = True)
-        
+        # 可以用来研究时间变化
         baseDf.to_csv('./data.csv')
+        
+        # 每个用户求和
+        single = baseDf.groupby('cc_uid').sum()
+        single.to_csv('./single.csv')
         
         
 if __name__ == '__main__':
