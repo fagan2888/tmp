@@ -46,6 +46,7 @@ class load:
         
         # 每个用户求和
         single = baseDf.groupby('cc_uid').sum()
+        single.sort_values(by = ['cc_investable_asset'], ascending = True, inplace = True)
         single.to_csv('./single.csv')
         
         
