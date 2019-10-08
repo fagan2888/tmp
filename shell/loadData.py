@@ -40,8 +40,8 @@ class load:
         baseDf.sort_values(by = ['created_at'], ascending = False, inplace = True)
         baseDf.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
         
-#        baseDf.sort_values(by = ['cc_age'], ascending = True, inplace = True )
-#        baseDf.drop_duplicates(subset = ['cc_uid'], keep = 'first', inplace = True)
+        baseDf.sort_values(by = ['cc_age'], ascending = True, inplace = True )
+        baseDf.drop_duplicates(subset = ['cc_uid'], keep = 'first', inplace = True)
         
         baseDf.to_csv('./data.csv')
         
