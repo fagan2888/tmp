@@ -41,14 +41,16 @@ class load:
         baseDf.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
         baseDf.sort_values(by = ['cc_uid','cc_age'], ascending = True, inplace = True)
         
+        excel = pd.ExcelWriter('output.xlsx')
         # 可以用来研究时间变化
-        baseDf.to_csv('./data.csv')
+        baseDf.to_excel(excel,'Sheet1')
         
         # 每个用户求和
         single = baseDf.groupby('cc_uid').sum()
         single.sort_values(by = ['cc_investable_asset'], ascending = True, inplace = True)
-        single.to_csv('./single.csv')
+        single.to_excel(excel,'Sheet2')
         
+        excel.save()
         
 if __name__ == '__main__':
     optParser = OptionParser(usage='usage: %prog [options]')
