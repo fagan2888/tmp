@@ -43,12 +43,12 @@ class load:
         
         excel = pd.ExcelWriter('output.xlsx')
         # 可以用来研究时间变化
-        baseDf.to_excel(excel,'Sheet1')
+        baseDf.to_excel(excel,'年开支和年龄的关系')
         
         # 每个用户求和
-        single = baseDf.groupby('cc_uid').sum()
-        single.sort_values(by = ['cc_investable_asset'], ascending = True, inplace = True)
-        single.to_excel(excel,'Sheet2')
+        single = baseDf.sort_values(by = ['cc_age'], ascending = True)
+        #single.sort_values(by = ['cc_investable_asset'], ascending = True, inplace = True)
+        single.to_excel(excel,'开支和可投资资产关系')
         
         excel.save()
         
