@@ -61,8 +61,10 @@ class load:
         s = sql.select(columns)
         df1 = pd.read_sql(s,db)
         df1.sort_values(by = ['created_at'], ascending = False, inplace = True)
-        df1.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
-        df1.set_index(['cc_uid', 'cc_age'], inplace = True)
+        df1.columns = ['uid','age','expenditure','created_at']
+        df1.drop_duplicates(subset = ['uid','age'],keep = 'first', inplace = True)
+        df1.drop('created_at', axis = 1,  inplace = True)
+        df1.set_index(['uid', 'age'], inplace = True)
         
         db = batch.connection('prophet')
         metadata = sql.MetaData(bind=db)
@@ -76,9 +78,13 @@ class load:
         s = sql.select(columns)
         df2 = pd.read_sql(s,db)
         df2.sort_values(by = ['created_at'], ascending = False, inplace = True)
-        df2.drop_duplicates(subset = ['fi_uid','fi_age'],keep = 'first', inplace = True)
-        df2 = df2.groupby(['fi_uid','fi_age']).sum()
-        df2.set_index(['fi_uid', 'fi_age'], inplace = True)
+        df2.columns = ['uid','age','income','created_at']
+        income = df2.copy().groupby(['uid','age'])['income'].sum()
+        df2.drop('income', axis = 1, inplace = True)
+        df2.drop_duplicates(subset = ['uid','age'],keep = 'first', inplace = True)
+        df2.set_index(['uid', 'age'], inplace = True)
+        df2['income'] = income
+        df2.drop('created_at', axis = 1, inplace = True)
         
         df = pd.merge(df1, df2, left_index = True, right_index = True)
         
