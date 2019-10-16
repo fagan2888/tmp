@@ -13,6 +13,7 @@ from sqlhelper import batch
 from time import strftime
 from datetime import datetime,timedelta
 from optparse import OptionParser
+from ipdb import set_trace
 
 class load:
     
@@ -40,10 +41,6 @@ class load:
         baseDf.sort_values(by = ['created_at'], ascending = False, inplace = True)
         baseDf.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
         baseDf.sort_values(by = ['cc_age'], ascending = True, inplace = True)
-        
-        excel = pd.ExcelWriter('output.xlsx')
-        # 可以用来研究时间变化
-        baseDf.to_excel(excel,'年开支和年龄的关系')
         
         # 每个用户求和
         #single.sort_values(by = ['cc_investable_asset'], ascending = True, inplace = True)
@@ -88,8 +85,14 @@ class load:
         
         df = pd.merge(df1, df2, left_index = True, right_index = True)
         
+        print(baseDf)
+        set_trace()
+        print(df)
+        set_trace()
+        
+        excel = pd.ExcelWriter('output.xlsx')
+        baseDf.to_excel(excel,'年开支和年龄的关系')
         df.to_excel(excel, '年收入和年支出的关系')
-
         excel.save()        
 
 
