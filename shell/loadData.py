@@ -24,7 +24,7 @@ class load:
         suid = self.suid
         euid = self.euid
 
-        #连接到现在的数据库
+        # 连接到现在的数据库
         db = batch.connection('prophet')
         metadata = sql.MetaData(bind=db)
         t = sql.Table('prophet_cash_cycle', metadata, autoload=True)
@@ -39,19 +39,54 @@ class load:
         baseDf = pd.read_sql(s,db)
         baseDf.sort_values(by = ['created_at'], ascending = False, inplace = True)
         baseDf.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
-        baseDf.sort_values(by = ['cc_uid','cc_age'], ascending = True, inplace = True)
+        baseDf.sort_values(by = ['cc_age'], ascending = True, inplace = True)
         
         excel = pd.ExcelWriter('output.xlsx')
         # 可以用来研究时间变化
         baseDf.to_excel(excel,'年开支和年龄的关系')
         
         # 每个用户求和
-        single = baseDf.sort_values(by = ['cc_age'], ascending = True)
         #single.sort_values(by = ['cc_investable_asset'], ascending = True, inplace = True)
-        single.to_excel(excel,'开支和可投资资产关系')
+
+        # 找数据方便计算收入和开支的关系
+        db = batch.connection('prophet')
+        metadata = sql.MetaData(bind=db)
+        t = sql.Table('prophet_cash_cycle', metadata, autoload=True)
+        columns = [
+            t.c.cc_uid,
+            t.c.cc_age,
+            t.c.cc_expenditure_asset,
+            t.c.created_at,
+        ]
+        s = sql.select(columns)
+        df1 = pd.read_sql(s,db)
+        df1.sort_values(by = ['created_at'], ascending = False, inplace = True)
+        df1.drop_duplicates(subset = ['cc_uid','cc_age'],keep = 'first', inplace = True)
+        df1.set_index(['cc_uid', 'cc_age'], inplace = True)
         
-        excel.save()
+        db = batch.connection('prophet')
+        metadata = sql.MetaData(bind=db)
+        t = sql.Table('prophet_family_income_detail', metadata, autoload=True)
+        columns = [
+            t.c.fi_uid,
+            t.c.fi_age,
+            t.c.fi_income_asset,
+            t.c.created_at,
+        ]
+        s = sql.select(columns)
+        df2 = pd.read_sql(s,db)
+        df2.sort_values(by = ['created_at'], ascending = False, inplace = True)
+        df2.drop_duplicates(subset = ['fi_uid','fi_age'],keep = 'first', inplace = True)
+        df2 = df2.groupby(['fi_uid','fi_age']).sum()
+        df2.set_index(['fi_uid', 'fi_age'], inplace = True)
         
+        df = pd.merge(df1, df2, left_index = True, right_index = True)
+        
+        df.to_excel(excel, '年收入和年支出的关系')
+
+        excel.save()        
+
+
 if __name__ == '__main__':
     optParser = OptionParser(usage='usage: %prog [options]')
     startId = '0000000000'
