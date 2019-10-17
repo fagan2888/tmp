@@ -85,11 +85,6 @@ class load:
         
         df = pd.merge(df1, df2, left_index = True, right_index = True)
         
-        print(baseDf)
-        set_trace()
-        print(df)
-        set_trace()
-        
         excel = pd.ExcelWriter('output.xlsx')
         baseDf.to_excel(excel,'年开支和年龄的关系')
         df.to_excel(excel, '年收入和年支出的关系')

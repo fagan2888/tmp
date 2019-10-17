@@ -8,7 +8,8 @@ import pandas as pd
 from datetime import datetime
 from ipdb import set_trace
 
-df = pd.read_excel('output.xlsx',sheet_name = 0)
+#df = pd.read_excel('output.xlsx',sheet_name = 0)
+df = pd.read_excel('output.xlsx',sheet_name = 1)
 
 ## analysis relation between expenditure and age
 #age_expenditure = pd.DataFrame()
@@ -19,38 +20,38 @@ df = pd.read_excel('output.xlsx',sheet_name = 0)
 #age_expenditure = age_expenditure.groupby('age')['expenditure'].mean()
 #age_expenditure.to_excel('ageExpenditure.xlsx')
 
-# analysis relation between expenditure and investable asset
-ie = df.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie.columns = ['asset','expenditure']
-
-ie30 = df[df['cc_age']<30]
-ie30 = ie30.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie30.columns = ['asset','expenditure']
-
-ie40 = df[df['cc_age']>=30]
-ie40 = ie40[ie40['cc_age']<40]
-ie40 = ie40.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie40.columns = ['asset','expenditure']
-
-ie50 = df[df['cc_age']>=40]
-ie50 = ie50[ie50['cc_age']<50]
-ie50 = ie50.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie50.columns = ['asset','expenditure']
-
-ie60 = df[df['cc_age']>=50]
-ie60 = ie60[ie60['cc_age']<60]
-ie60 = ie60.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie60.columns = ['asset','expenditure']
-
-ie70 = df[df['cc_age']>=60]
-ie70 = ie70[ie70['cc_age']<70]
-ie70 = ie70.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie70.columns = ['asset','expenditure']
-
-ie86 = df[df['cc_age']>=70]
-ie86 = ie86[ie86['cc_age']<86]
-ie86 = ie86.loc[:,['cc_investable_asset','cc_expenditure_asset']]
-ie86.columns = ['asset','expenditure']
+## analysis relation between expenditure and investable asset
+#ie = df.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie.columns = ['asset','expenditure']
+#
+#ie30 = df[df['cc_age']<30]
+#ie30 = ie30.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie30.columns = ['asset','expenditure']
+#
+#ie40 = df[df['cc_age']>=30]
+#ie40 = ie40[ie40['cc_age']<40]
+#ie40 = ie40.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie40.columns = ['asset','expenditure']
+#
+#ie50 = df[df['cc_age']>=40]
+#ie50 = ie50[ie50['cc_age']<50]
+#ie50 = ie50.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie50.columns = ['asset','expenditure']
+#
+#ie60 = df[df['cc_age']>=50]
+#ie60 = ie60[ie60['cc_age']<60]
+#ie60 = ie60.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie60.columns = ['asset','expenditure']
+#
+#ie70 = df[df['cc_age']>=60]
+#ie70 = ie70[ie70['cc_age']<70]
+#ie70 = ie70.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie70.columns = ['asset','expenditure']
+#
+#ie86 = df[df['cc_age']>=70]
+#ie86 = ie86[ie86['cc_age']<86]
+#ie86 = ie86.loc[:,['cc_investable_asset','cc_expenditure_asset']]
+#ie86.columns = ['asset','expenditure']
 
 ## use mean value to calculate
 #ie = ie.groupby('asset')['expenditure'].mean()
@@ -91,15 +92,60 @@ def group (df, column, step):
     
     return df
 
-ie  = group(ie, 'asset', 100000).groupby('group').mean()
-ie30  = group(ie30, 'asset', 100000).groupby('group').mean()
-ie40  = group(ie40, 'asset', 100000).groupby('group').mean()
-ie50  = group(ie50, 'asset', 100000).groupby('group').mean()
-ie60  = group(ie60, 'asset', 100000).groupby('group').mean()
-ie70  = group(ie70, 'asset', 100000).groupby('group').mean()
-ie86  = group(ie86, 'asset', 100000).groupby('group').mean()
+#ie  = group(ie, 'asset', 100000).groupby('group').mean()
+#ie30  = group(ie30, 'asset', 100000).groupby('group').mean()
+#ie40  = group(ie40, 'asset', 100000).groupby('group').mean()
+#ie50  = group(ie50, 'asset', 100000).groupby('group').mean()
+#ie60  = group(ie60, 'asset', 100000).groupby('group').mean()
+#ie70  = group(ie70, 'asset', 100000).groupby('group').mean()
+#ie86  = group(ie86, 'asset', 100000).groupby('group').mean()
+#
+#excel = pd.ExcelWriter('assetExpenditureGrouped.xlsx')
+#ie.to_excel(excel, 'all')
+#ie30.to_excel(excel, '30')
+#ie40.to_excel(excel, '40')
+#ie50.to_excel(excel, '50')
+#ie60.to_excel(excel, '60')
+#ie70.to_excel(excel, '70')
+#ie86.to_excel(excel, '86')
+#excel.save()
 
-excel = pd.ExcelWriter('assetExpenditureGrouped.xlsx')
+
+# analysis relation between expenditure and income asset
+ie = df.loc[:,['income','expenditure']]
+
+ie30 = df[df['age']<30]
+ie30 = ie30.loc[:,['income','expenditure']]
+
+ie40 = df[df['age']>=30]
+ie40 = ie40[ie40['age']<40]
+ie40 = ie40.loc[:,['income','expenditure']]
+
+ie50 = df[df['age']>=40]
+ie50 = ie50[ie50['age']<50]
+ie50 = ie50.loc[:,['income','expenditure']]
+
+ie60 = df[df['age']>=50]
+ie60 = ie60[ie60['age']<60]
+ie60 = ie60.loc[:,['income','expenditure']]
+
+ie70 = df[df['age']>=60]
+ie70 = ie70[ie70['age']<70]
+ie70 = ie70.loc[:,['income','expenditure']]
+
+ie86 = df[df['age']>=70]
+ie86 = ie86[ie86['age']<86]
+ie86 = ie86.loc[:,['income','expenditure']]
+
+ie  = group(ie, 'income', 100000).groupby('group').mean()
+ie30  = group(ie30, 'income', 100000).groupby('group').mean()
+ie40  = group(ie40, 'income', 100000).groupby('group').mean()
+ie50  = group(ie50, 'income', 100000).groupby('group').mean()
+ie60  = group(ie60, 'income', 100000).groupby('group').mean()
+ie70  = group(ie70, 'income', 100000).groupby('group').mean()
+ie86  = group(ie86, 'income', 100000).groupby('group').mean()
+
+excel = pd.ExcelWriter('incomeExpenditureGrouped.xlsx')
 ie.to_excel(excel, 'all')
 ie30.to_excel(excel, '30')
 ie40.to_excel(excel, '40')
