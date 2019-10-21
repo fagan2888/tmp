@@ -214,39 +214,48 @@ def group (df, column, step):
 #excel.save()
 #
 # analysis ratio using grouped income
-#df = pd.read_excel('incomeExpenditureGrouped.xlsx')
-dfBasic = pd.read_excel('analysis.xlsx')
-dfBasic.sort_values('uid', inplace = True, ascending = True)
-uid = dfBasic['uid']
-dfBasic = dfBasic.reset_index()
-dfBasic.drop('index', axis = 1, inplace = True)
-uid.drop_duplicates(inplace = True)
-dfAll = pd.DataFrame(columns = ['uid', 'age', 'asset', 'income', 'expenditure', 'ratioOneYear', 'ratioTwoYear', 'ratioThreeYear', 'ratioFourYear', 'ratioFiveYear', 'ratioSixYear', 'ratioSevenYear', 'ratioEightYear', 'ratioNineYear', 'ratioTenYear'])
-for ID in uid:
-    df = dfBasic[dfBasic['uid'] == ID]
-    df['ratioOneYear'] = ratio(df ,step = 1)
-    df['ratioTwoYear'] = ratio(df ,step = 2)
-    df['ratioThreeYear'] = ratio(df ,step = 3)
-    df['ratioFourYear'] = ratio(df ,step = 4)
-    df['ratioFiveYear'] = ratio(df ,step = 5)
-    df['ratioSixYear'] = ratio(df ,step = 6)
-    df['ratioSevenYear'] = ratio(df ,step = 7)
-    df['ratioEightYear'] = ratio(df ,step = 8)
-    df['ratioNineYear'] = ratio(df, step = 9)
-    df['ratioTenYear'] = ratio(df, step = 10)
-#    dfBasic[dfBasic['uid'] == ID]['ratioOneYear'] = df['ratioOneYear'] 
-#    dfBasic[dfBasic['uid'] == ID]['ratioTwoYear'] = df['ratioTwoYear'] 
-#    dfBasic[dfBasic['uid'] == ID]['ratioThreeYear'] = df['ratioThreeYear']  
-#    dfBasic[dfBasic['uid'] == ID]['ratioFourYear'] = df['ratioFourYear']  
-#    dfBasic[dfBasic['uid'] == ID]['ratioFiveYear'] = df['ratioFiveYear']  
-#    dfBasic[dfBasic['uid'] == ID]['ratioSixYear'] = df['ratioSixYear'] 
-#    dfBasic[dfBasic['uid'] == ID]['ratioSevenYear'] = df['ratioSevenYear']  
-#    dfBasic[dfBasic['uid'] == ID]['ratioEightYear'] = df['ratioEightYear']  
-#    dfBasic[dfBasic['uid'] == ID]['ratioNineYear'] = df['ratioNineYear']  
-#    dfBasic[dfBasic['uid'] == ID]['ratioTenYear'] = df['ratioTenYear']  
-    dfAll = pd.concat([dfAll,df], axis = 0)
+##df = pd.read_excel('incomeExpenditureGrouped.xlsx')
+#dfBasic = pd.read_excel('analysis.xlsx')
+#dfBasic.sort_values('uid', inplace = True, ascending = True)
+#uid = dfBasic['uid']
+#dfBasic = dfBasic.reset_index()
+#dfBasic.drop('index', axis = 1, inplace = True)
+#uid.drop_duplicates(inplace = True)
+#dfAll = pd.DataFrame(columns = ['uid', 'age', 'asset', 'income', 'expenditure', 'ratioOneYear', 'ratioTwoYear', 'ratioThreeYear', 'ratioFourYear', 'ratioFiveYear', 'ratioSixYear', 'ratioSevenYear', 'ratioEightYear', 'ratioNineYear', 'ratioTenYear'])
+#for ID in uid:
+#    df = dfBasic[dfBasic['uid'] == ID]
+#    df['ratioOneYear'] = ratio(df ,step = 1)
+#    df['ratioTwoYear'] = ratio(df ,step = 2)
+#    df['ratioThreeYear'] = ratio(df ,step = 3)
+#    df['ratioFourYear'] = ratio(df ,step = 4)
+#    df['ratioFiveYear'] = ratio(df ,step = 5)
+#    df['ratioSixYear'] = ratio(df ,step = 6)
+#    df['ratioSevenYear'] = ratio(df ,step = 7)
+#    df['ratioEightYear'] = ratio(df ,step = 8)
+#    df['ratioNineYear'] = ratio(df, step = 9)
+#    df['ratioTenYear'] = ratio(df, step = 10)
+##    dfBasic[dfBasic['uid'] == ID]['ratioOneYear'] = df['ratioOneYear'] 
+##    dfBasic[dfBasic['uid'] == ID]['ratioTwoYear'] = df['ratioTwoYear'] 
+##    dfBasic[dfBasic['uid'] == ID]['ratioThreeYear'] = df['ratioThreeYear']  
+##    dfBasic[dfBasic['uid'] == ID]['ratioFourYear'] = df['ratioFourYear']  
+##    dfBasic[dfBasic['uid'] == ID]['ratioFiveYear'] = df['ratioFiveYear']  
+##    dfBasic[dfBasic['uid'] == ID]['ratioSixYear'] = df['ratioSixYear'] 
+##    dfBasic[dfBasic['uid'] == ID]['ratioSevenYear'] = df['ratioSevenYear']  
+##    dfBasic[dfBasic['uid'] == ID]['ratioEightYear'] = df['ratioEightYear']  
+##    dfBasic[dfBasic['uid'] == ID]['ratioNineYear'] = df['ratioNineYear']  
+##    dfBasic[dfBasic['uid'] == ID]['ratioTenYear'] = df['ratioTenYear']  
+#    dfAll = pd.concat([dfAll,df], axis = 0)
+#
+#dfAll.to_excel('fullDataForEveryone.xlsx')
 
-dfAll.to_excel('fullDataForEveryone.xlsx')
+dfAll = pd.read_excel('fullDataForEveryone.xlsx', sheet_name = 1)
+print(dfAll)
+set_trace()
+# grouped
+for age in range(18,86):
+    print(age)
+    set_trace()
+
 #X = df[['age', 'income']].values
 #y = df['expenditure'].values
 #ols = sm.OLS(y,sm.add_constant(X).fit())
