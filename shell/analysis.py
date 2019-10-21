@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from ipdb import set_trace
+import statesmodles.api as sm
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
 #df0 = df.copy()
@@ -215,4 +216,7 @@ def group (df, column, step):
 # analysis ratio using grouped income
 #df = pd.read_excel('incomeExpenditureGrouped.xlsx')
 df = pd.read_excel('analysis.xlsx')
-print(df[df['age'] <= 18])
+X = df[['age', 'income']].values
+y = df['expenditure'].values
+ols = sm.OLS(y,sm.add_constant(X).fit())
+
