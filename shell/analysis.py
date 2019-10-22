@@ -286,9 +286,12 @@ def group (df, column, step):
 #                        
 #dfTmp.to_excel('niceDataForRatio.xlsx')
 
-dfTmp = pd.read_excel('niceDataForRatio.xlsx')
+dfTmp = pd.read_excel('niceDataForRatio.xlsx',index_col = 0, sheet_name = 0)
+print(dfTmp)
+set_trace()
 dfTmp = dfTmp[dfTmp['age']<70]
-dfTmp.to_excel('niceDataForRatio(<70).xlsx')
+dfTmp = dfTmp[dfTmp['income']<10000000]
+dfTmp.to_excel('niceDataAdjusted.xlsx')
 
 #X = df[['age', 'income']].values
 #y = df['expenditure'].values
