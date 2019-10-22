@@ -286,12 +286,26 @@ def group (df, column, step):
 #                        
 #dfTmp.to_excel('niceDataForRatio.xlsx')
 
-dfTmp = pd.read_excel('niceDataForRatio.xlsx',index_col = 0, sheet_name = 0)
-print(dfTmp)
-set_trace()
-dfTmp = dfTmp[dfTmp['age']<70]
-dfTmp = dfTmp[dfTmp['income']<10000000]
-dfTmp.to_excel('niceDataAdjusted.xlsx')
+#dfTmp = pd.read_excel('niceDataForRatio.xlsx',index_col = 0, sheet_name = 0)
+#dfTmp = dfTmp[dfTmp['age']<70]
+#dfTmp = dfTmp[dfTmp['income']<10000000]
+#dfTmp.to_excel('niceDataAdjusted.xlsx')
+
+dfTmp = pd.read_excel('niceDataAdjusted.xlsx')
+dfTmp30 = dfTmp[dfTmp['age']<30]
+dfTmp40 = dfTmp[dfTmp['age']<40]
+dfTmp50 = dfTmp[dfTmp['age']<50]
+dfTmp60 = dfTmp[dfTmp['age']<60]
+dfTmp86 = dfTmp[dfTmp['age']>=60]
+
+excel = pd.ExcelWriter('niceDataAdjustedGrouped.xlsx')
+dfTmp30.to_excel(excel, '30')
+dfTmp40.to_excel(excel, '40')
+dfTmp50.to_excel(excel, '50')
+dfTmp60.to_excel(excel, '60')
+dfTmp86.to_excel(excel, '86')
+
+excel.save()
 
 #X = df[['age', 'income']].values
 #y = df['expenditure'].values
