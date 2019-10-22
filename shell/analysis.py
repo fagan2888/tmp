@@ -248,13 +248,21 @@ def group (df, column, step):
 #
 #dfAll.to_excel('fullDataForEveryone.xlsx')
 
-dfAll = pd.read_excel('fullDataForEveryone.xlsx', sheet_name = 1)
-print(dfAll)
+dfAll = pd.read_excel('fullDataForEveryone.xlsx',index_col = 0, sheet_name = 0)
+dfAll = dfAll[['age','income','expenditure']]
+dfAdjusted = pd.DataFrame(columns = ['age','income','expenditure'])
+ageMin = dfAll.age.min()
+for age in range(ageMin,86):
+    df = dfAll[dfAll['age'] == age]
+    df = group(df, 'income', 100000).groupby('group').mean()
+    df['age'] = age
+    dfAdjusted = pd.concat([dfAdjusted, df], axis = 0)
+
+print(dfAdjusted)
 set_trace()
-# grouped
-for age in range(18,86):
-    print(age)
-    set_trace()
+dfAdjusted.to_excel('nicedataforanalysis.xlsx')
+
+
 
 #X = df[['age', 'income']].values
 #y = df['expenditure'].values
