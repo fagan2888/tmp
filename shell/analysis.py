@@ -248,19 +248,45 @@ def group (df, column, step):
 #
 #dfAll.to_excel('fullDataForEveryone.xlsx')
 
-dfAll = pd.read_excel('fullDataForEveryone.xlsx',index_col = 0, sheet_name = 0)
-dfAll = dfAll[['age','income','expenditure']]
-dfAdjusted = pd.DataFrame(columns = ['age','income','expenditure'])
-ageMin = dfAll.age.min()
-for age in range(ageMin,86):
-    df = dfAll[dfAll['age'] == age]
-    df = group(df, 'income', 100000).groupby('group').mean()
-    df['age'] = age
-    dfAdjusted = pd.concat([dfAdjusted, df], axis = 0)
+#dfAll = pd.read_excel('fullDataForEveryone.xlsx',index_col = 0, sheet_name = 0)
+#dfAll = dfAll[['age','income','expenditure']]
+#dfAdjusted = pd.DataFrame(columns = ['age','income','expenditure'])
+#ageMin = dfAll.age.min()
+#for age in range(ageMin,86):
+#    df = dfAll[dfAll['age'] == age]
+#    df = group(df, 'income', 100000).groupby('group').mean()
+#    df['age'] = age
+#    dfAdjusted = pd.concat([dfAdjusted, df], axis = 0)
+#
+#dfAdjusted.to_excel('nicedataforanalysis.xlsx')
 
-print(dfAdjusted)
+dfTmp = pd.read_excel('nicedataforanalysis.xlsx')
+ratioOneYear = ratio(dfTmp, step = 1)
+ratioTwoYear = ratio(dfTmp, step = 2)
+ratioThreeYear = ratio(dfTmp, step = 3)
+ratioFourYear = ratio(dfTmp, step = 4)
+ratioFiveYear = ratio(dfTmp, step = 5)
+ratioSixYear = ratio(dfTmp, step = 6)
+ratioSevenYear = ratio(dfTmp, step = 7)
+ratioEightYear = ratio(dfTmp, step = 8)
+ratioNineYear = ratio(dfTmp, step = 9)
+ratioTenYear = ratio(dfTmp, step = 10)
+                        
+dfTmp['ratioOneYear'] = ratioOneYear
+dfTmp['ratioTwoYear'] = ratioTwoYear
+dfTmp['ratioThreeYear'] = ratioThreeYear
+dfTmp['ratioFourYear'] = ratioFourYear 
+dfTmp['ratioFiveYear'] = ratioFiveYear 
+dfTmp['ratioSixYear'] = ratioSixYear
+dfTmp['ratioSevenYear'] = ratioSevenYear
+dfTmp['ratioEightYear'] = ratioEightYear
+dfTmp['ratioNineYear'] = ratioNineYear 
+dfTmp['ratioTenYear'] = ratioTenYear
+
+print(dfTmp)
 set_trace()
-dfAdjusted.to_excel('nicedataforanalysis.xlsx')
+                        
+dfTmp.to_excel('niceDataForRatio.xlsx')
 
 
 
