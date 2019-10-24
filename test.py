@@ -14,8 +14,10 @@ from ipdb import set_trace
 #print(df)
 #print(df.pct_change(periods= 2))
 #
-a = []
-for i in range(10):
-    a[i] = i
-print(a)
-
+#a = []
+#for i in range(10):
+#    a[i] = i
+#print(a)
+#
+test = '"""'+'ok'+'"""'
+print(test)
