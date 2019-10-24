@@ -8,6 +8,44 @@ import pandas as pd
 from datetime import datetime
 from ipdb import set_trace
 import statsmodels.api as sm
+from sqlhelper import batch
+
+from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+Base = declarative_base()
+
+class prophet_user_asset_health(Base):
+    __tablename__  = 'prophet_user_asset_health'
+
+    ah_uid = Column()
+    ah_batch_id = Column()
+    ah_type = Column()
+    ah_origin_score = Column()
+    ah_optimize_score = Column()
+    created_at = Column()
+    updates_at = Column()
+
+    '''
+    engine = database.connection('caihui')
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    sql = session.query(tq_ix_mweight.tradedate, tq_ix_mweight.constituentcode).filter(tq_ix_mweight.secode == secode)
+    df = pd.read_sql(sql.statement, session.bind, index_col = ['tradedate'], parse_dates = ['tradedate'])
+    '''
+
+# select good users from database
+def gooduser():
+    db = db.batch('asset')
+    table = 
+    goodUser = df['ah_uid']
+    return goodUser
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
 #df0 = df.copy()
