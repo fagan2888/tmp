@@ -23,7 +23,7 @@ Base = declarative_base()
 class prophet_user_asset_health(Base):
     __tablename__  = 'prophet_user_asset_health'
 
-    ah_uid = Column()
+    ah_uid = Column('')
     ah_batch_id = Column()
     ah_type = Column()
     ah_origin_score = Column()
@@ -42,7 +42,8 @@ class prophet_user_asset_health(Base):
 
 # select good users from database
 def gooduser():
-    db = db.batch('asset')
+    db = batch.connection('asset')
+    Session = sessionmaker(bind)
     table = 
     goodUser = df['ah_uid']
     return goodUser

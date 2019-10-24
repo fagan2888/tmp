@@ -21,3 +21,8 @@ from ipdb import set_trace
 #
 test = '"""'+'ok'+'"""'
 print(test)
+
+print(ord('+'))
+print(ord('＋'))
+print(ord('-'))
+print(ord('－'))

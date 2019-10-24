@@ -20,6 +20,15 @@ def do(filename, day, why):
     df['基金'] = df['基金'].apply(lambda x: str(int(x)).zfill(6))
     df = df[df['操作']!='']
     df = df[df['基金']!='']
+   
+    def toEn(x):
+        if ord(x) == 65291:
+            x = chr(43)
+        if ord(x) == 65293:
+            x = chr(45)
+        return x
+
+    df['操作'] = df['操作'].apply(toEn)
     dfNew = pd.DataFrame(columns = ['pool','date','op','code','why'])
     dfNew['pool'] = df['基金池']
     dfNew['date'] = day
@@ -33,6 +42,6 @@ def do(filename, day, why):
 
 if __name__ == '__main__':
     day = defaultDate()
-    name = '玄元基金池实盘__1022_新增.xlsx'
+    name = 'new.xlsx'
     why = '"'*3 + '定期更换基金池' + '"'*3
     do(filename = name, day = day, why = why)
