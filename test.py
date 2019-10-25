@@ -19,7 +19,7 @@ from ipdb import set_trace
 #    a[i] = i
 #print(a)
 #
-test = '"""'+'ok'+'"""'
+test = '\\'
 print(test)
 
 print(ord('+'))

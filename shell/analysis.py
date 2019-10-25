@@ -21,46 +21,120 @@ logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
-class prophet_family_free(Base):
+
+# analysis in groups
+# diff <= 100000 is considerd in the same group
+
+def group (df, column, step):
+    df.sort_values(by = [column], inplace = True, ascending = True)
+    df['group'] = 0
+    v0 = df[column].iloc[0]
+    number = 0
+    for i in range(len(df)):
+        v = df[column].iloc[i]
+        if v > step + v0:
+            number += 1
+            v0 = df[column].iloc[i]
+
+        df['group'].iloc[i] = number
+
+    df.set_index('group' ,inplace = True)
     
-    __tablename__  = 'prophet_family_free'
+    return df
 
-    id = Column(Integer, primary_key = True)
-    ff_uid = Column(String)
-    ff_batch_id = Column(String)
-    ff_type = Column(Integer)
-    ff_risk = Column(Float)
-    ff_is_select = Column(Integer)
-    ff_age = Column(Integer)
-    created_at = Column(DateTime)
-    updates_at = Column(DateTime)
+def ratio(df, step, column = 'age'):
+    df.sort_values(column, inplace = True, ascending = True)
+    ratio = list()
+    for i in range(len(df)):
+        col = df[column].iloc[i]
+        allExpenditure = df[df[column] >= col]['expenditure'].sum()
+        dfE = df[df[column] >= col]
+        dfE = dfE[dfE[column] < (col + step)]
+        expenditure = dfE['expenditure'].sum()
+        ratio.append(expenditure / allExpenditure)
 
-# select good users from database
-# if all needs of a user can be fullfilled then the user is a good user
-# ff_age = -1 means that the need  cannot be realized
-def goodUser():
-    sql = toSQL('prophet')
-    sql = sql.query(prophet_family_free.ff_uid, prophet_family_free.ff_age, prophet_family_free.ff_batch_id, prophet_family_free.created_at).statement
-    df = toDf(key = 'prophet', sql = sql, parse_dates = '')
-    df.sort_values(by = 'created_at', ascending = False, inplace = True)
-    df.drop_duplicates(subset = ['ff_uid','ff_batch_id'], keep = 'first', inplace = True)
-    uids = df[['ff_uid']].drop_duplicates('ff_uid',keep = 'first')
-    goodUser = list()
-    for uid in uids['ff_uid']:
-        tmp = df[df['ff_uid']==uid]
-        if (tmp['ff_age'] != -1).all():    
-            goodUser.append(uid)
+    return ratio
 
-    return goodUser
 
-goodID = goodUser()
-
+#class prophet_family_free(Base):
+#    
+#    __tablename__  = 'prophet_family_free'
 #
-df = pd.read_excel('output.xlsx', index_col = 0, sheet_name = 1)
-df = df[df.index.isin(goodID)]
-print(df)
-df.to_excel('outputGoodUsers.xlsx')
+#    id = Column(Integer, primary_key = True)
+#    ff_uid = Column(String)
+#    ff_batch_id = Column(String)
+#    ff_type = Column(Integer)
+#    ff_risk = Column(Float)
+#    ff_is_select = Column(Integer)
+#    ff_age = Column(Integer)
+#    created_at = Column(DateTime)
+#    updates_at = Column(DateTime)
+#
+## select good users from database
+## if all needs of a user can be fullfilled then the user is a good user
+## ff_age = -1 means that the need  cannot be realized
+#def goodUser():
+#    sql = toSQL('prophet')
+#    sql = sql.query(prophet_family_free.ff_uid, prophet_family_free.ff_age, prophet_family_free.ff_batch_id, prophet_family_free.created_at).statement
+#    df = toDf(key = 'prophet', sql = sql, parse_dates = '')
+#    df.sort_values(by = 'created_at', ascending = False, inplace = True)
+#    df.drop_duplicates(subset = ['ff_uid','ff_batch_id'], keep = 'first', inplace = True)
+#    uids = df[['ff_uid']].drop_duplicates('ff_uid',keep = 'first')
+#    goodUser = list()
+#    for uid in uids['ff_uid']:
+#        tmp = df[df['ff_uid']==uid]
+#        if (tmp['ff_age'] != -1).all():    
+#            goodUser.append(uid)
+#
+#    return goodUser
+#
+#goodID = goodUser()
+#
+#df = pd.read_excel('output.xlsx', index_col = 0, sheet_name = 1)
+#df = df[df.index.isin(goodID)]
+#df.to_excel('outputGoodUsers.xlsx')
+#
+
+df = pd.read_excel('outputGoodUsers.xlsx', sheet_name = 0)
+dfAll = df[['age','income','expenditure']]
+dfAdjusted = pd.DataFrame(columns = ['age','income','expenditure'])
+ageMin = dfAll.age.min()
+for age in range(ageMin,86):
+    df = dfAll[dfAll['age'] == age]
+    df = group(df, 'income', 100000).groupby('group').mean()
+    df['age'] = age
+    dfAdjusted = pd.concat([dfAdjusted, df], axis = 0)
+
+ratioOneYear = ratio(dfAdjusted, step = 1)
+ratioTwoYear = ratio(dfAdjusted, step = 2)
+ratioThreeYear = ratio(dfAdjusted, step = 3)
+ratioFourYear = ratio(dfAdjusted, step = 4)
+ratioFiveYear = ratio(dfAdjusted, step = 5)
+ratioSixYear = ratio(dfAdjusted, step = 6)
+ratioSevenYear = ratio(dfAdjusted, step = 7)
+ratioEightYear = ratio(dfAdjusted, step = 8)
+ratioNineYear = ratio(dfAdjusted, step = 9)
+ratioTenYear = ratio(dfAdjusted, step = 10)
+
+dfAdjusted['ratioOneYear'] = ratioOneYear
+dfAdjusted['ratioTwoYear'] = ratioTwoYear
+dfAdjusted['ratioThreeYear'] = ratioThreeYear
+dfAdjusted['ratioFourYear'] = ratioFourYear 
+dfAdjusted['ratioFiveYear'] = ratioFiveYear 
+dfAdjusted['ratioSixYear'] = ratioSixYear
+dfAdjusted['ratioSevenYear'] = ratioSevenYear
+dfAdjusted['ratioEightYear'] = ratioEightYear
+dfAdjusted['ratioNineYear'] = ratioNineYear 
+dfAdjusted['ratioTenYear'] = ratioTenYear
+
+print(dfAdjusted)
 set_trace()
+dfAdjusted.to_excel('outputGoodUsersGroupedbyIncome.xlsx')
+print('ok')
+set_trace()
+
+
+
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
 #df0 = df.copy()
@@ -76,19 +150,6 @@ set_trace()
 #df0.reset_index(inplace = True)
 #df1 = df1.groupby('age').mean()
 #df1.reset_index(inplace = True)
-
-def ratio(df, step, column = 'age'):
-    df.sort_values(column, inplace = True, ascending = True)
-    ratio = list()
-    for i in range(len(df)):
-        col = df[column].iloc[i]
-        allExpenditure = df[df[column] >= col]['expenditure'].sum()
-        dfE = df[df[column] >= col]
-        dfE = dfE[dfE[column] < (col + step)]
-        expenditure = dfE['expenditure'].sum()
-        ratio.append(expenditure / allExpenditure)
-
-    return ratio
 
 #ratioOneYear = ratio(df1, step = 1)
 #ratioTwoYear = ratio(df1, step = 2)
@@ -117,7 +178,7 @@ def ratio(df, step, column = 'age'):
 #newDf['ratioSixYear'] = ratioSixYear
 #newDf['ratioSevenYear'] = ratioSevenYear
 #newDf['ratioEightYear'] = ratioEightYear
-#newDf['ratioNineYear'] = ratioNiincomeneYear 
+#newDf['ratioNineYear'] = ratioNineYear 
 #newDf['ratioTenYear'] = ratioTenYear
 #
 #newDf.to_excel('analysisGrouped.xlsx')
@@ -182,26 +243,6 @@ def ratio(df, step, column = 'age'):
 #ie70.to_excel(excel, '70')
 #ie86.to_excel(excel, '86')
 #excel.save()
-
-# analysis in groups
-# diff <= 100000 is considerd in the same group
-
-def group (df, column, step):
-    df.sort_values(by = [column], inplace = True, ascending = True)
-    df['group'] = 0
-    v0 = df[column].iloc[0]
-    number = 0
-    for i in range(len(df)):
-        v = df[column].iloc[i]
-        if v > step + v0:
-            number += 1
-            v0 = df[column].iloc[i]
-
-        df['group'].iloc[i] = number
-
-    df.set_index('group' ,inplace = True)
-    
-    return df
 
 #ie  = group(ie, 'asset', 100000).groupby('group').mean()
 #ie30  = group(ie30, 'asset', 100000).groupby('group').mean()
@@ -344,21 +385,21 @@ def group (df, column, step):
 #dfTmp = dfTmp[dfTmp['income']<10000000]
 #dfTmp.to_excel('niceDataAdjusted.xlsx')
 
-dfTmp = pd.read_excel('niceDataAdjusted.xlsx')
-dfTmp30 = dfTmp[dfTmp['age']<30]
-dfTmp40 = dfTmp[dfTmp['age']<40]
-dfTmp50 = dfTmp[dfTmp['age']<50]
-dfTmp60 = dfTmp[dfTmp['age']<60]
-dfTmp86 = dfTmp[dfTmp['age']>=60]
-
-excel = pd.ExcelWriter('niceDataAdjustedGrouped.xlsx')
-dfTmp30.to_excel(excel, '30')
-dfTmp40.to_excel(excel, '40')
-dfTmp50.to_excel(excel, '50')
-dfTmp60.to_excel(excel, '60')
-dfTmp86.to_excel(excel, '86')
-
-excel.save()
+#dfTmp = pd.read_excel('niceDataAdjusted.xlsx')
+#dfTmp30 = dfTmp[dfTmp['age']<30]
+#dfTmp40 = dfTmp[dfTmp['age']<40]
+#dfTmp50 = dfTmp[dfTmp['age']<50]
+#dfTmp60 = dfTmp[dfTmp['age']<60]
+#dfTmp86 = dfTmp[dfTmp['age']>=60]
+#
+#excel = pd.ExcelWriter('niceDataAdjustedGrouped.xlsx')
+#dfTmp30.to_excel(excel, '30')
+#dfTmp40.to_excel(excel, '40')
+#dfTmp50.to_excel(excel, '50')
+#dfTmp60.to_excel(excel, '60')
+#dfTmp86.to_excel(excel, '86')
+#
+#excel.save()
 
 #X = df[['age', 'income']].values
 #y = df['expenditure'].values
