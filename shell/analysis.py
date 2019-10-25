@@ -9,6 +9,7 @@ from datetime import datetime
 from ipdb import set_trace
 import statsmodels.api as sm
 from sqlhelper import batch
+from sqlhelper.tableToDataframe import toSQL, toDf
 
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
@@ -20,33 +21,39 @@ logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
-class prophet_user_asset_health(Base):
-    __tablename__  = 'prophet_user_asset_health'
+class prophet_family_fee(Base):
+    
+    __tablename__  = 'prophet_family_fee'
 
-    ah_uid = Column('')
-    ah_batch_id = Column()
-    ah_type = Column()
-    ah_origin_score = Column()
-    ah_optimize_score = Column()
-    created_at = Column()
-    updates_at = Column()
-
-    '''
-    engine = database.connection('caihui')
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    sql = session.query(tq_ix_mweight.tradedate, tq_ix_mweight.constituentcode).filter(tq_ix_mweight.secode == secode)
-    df = pd.read_sql(sql.statement, session.bind, index_col = ['tradedate'], parse_dates = ['tradedate'])
-    '''
+    ff_uid = Column(String)
+    ff_batch_id = Column(String)
+    ff_type = Column(Integer)
+    ff_risk = Column(Float)
+    ff_is_select = Column(Integer)
+    ff_age = Column(Integer)
+    created_at = Column(Timestamp)
+    updates_at = Column(Timestamp)
 
 # select good users from database
+# if all needs of a user can be fullfilled then the user is a good user
+# ff_age = -1 means that the need  cannot be realized
 def gooduser():
-    db = batch.connection('asset')
-    Session = sessionmaker(bind)
-    table = 
-    goodUser = df['ah_uid']
+    sql = toSQL('asset')
+    sql = sql.query(prophet_family_fee.ff_uid).filter(prophet_family_fee.ff_age != -1).statement
+    df = toDf(key = 'asset', sql = sql)
+    uids = df['ff_uid'].drop_duplicates('ff_uid')
+    goodUser = pd.DataFrame(columns = ['uid'])
+    for uid in uids:
+        tmp = df[df['ff_uid']==uid].sort_values(by = 'created_at', ascending = False)
+        tmp = tmp.iloc[0]
+        tmp = tmp['ff_uid']
+        goodUser = pd.concat(goodUser, tmp, axis = 0)
+
     return goodUser
+
+users = goodUser()
+print(len(users))
+set_trace()
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
 #df0 = df.copy()

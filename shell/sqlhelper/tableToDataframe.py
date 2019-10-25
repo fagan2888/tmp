@@ -10,7 +10,7 @@ import sys
 sys.path.append('../shell')
 from config import uris
 
-def main(key = 'base', cols, filters, dates = ''):
+def toSQL(key = 'base'):
     
     # connect to database
     if key in uris.keys():
@@ -23,15 +23,26 @@ def main(key = 'base', cols, filters, dates = ''):
     # make sqls
     Session = sessionmaker(bind = engine)
     session = Session()
-    sql = session.query(cols)
+    sql = session
     
-    # add filters
+    return sql
 
-    sql = sql.statement
+
+def toDf(key = 'base', sql, parse_dates):
+
+    # connect to database
+    if key in uris.keys():
+        uri = uris[key]
+        engine = create_engine(uri)
+    else:
+        print('engine cannot be created! please check config.py')
+        return -1
 
     if parse_dates:
-        df = pd.read_sql(sql, session.bind, parse_dates = dates)
+        df = pd.read_sql(sql, engine, parse_dates = dates)
     else:
-        df = pd,read_sql(sql, session.bind)
+        df = pd,read_sql(sql, engine)
+
+    return df
 
 
