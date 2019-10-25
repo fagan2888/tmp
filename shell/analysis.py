@@ -25,22 +25,23 @@ class prophet_family_fee(Base):
     
     __tablename__  = 'prophet_family_fee'
 
+    id = Column(Integer, primary_key = True)
     ff_uid = Column(String)
     ff_batch_id = Column(String)
     ff_type = Column(Integer)
     ff_risk = Column(Float)
     ff_is_select = Column(Integer)
     ff_age = Column(Integer)
-    created_at = Column(Timestamp)
-    updates_at = Column(Timestamp)
+    created_at = Column(DateTime)
+    updates_at = Column(DateTime)
 
 # select good users from database
 # if all needs of a user can be fullfilled then the user is a good user
 # ff_age = -1 means that the need  cannot be realized
-def gooduser():
+def goodUser():
     sql = toSQL('asset')
     sql = sql.query(prophet_family_fee.ff_uid).filter(prophet_family_fee.ff_age != -1).statement
-    df = toDf(key = 'asset', sql = sql)
+    df = toDf(key = 'asset', sql = sql, parse_dates = '')
     uids = df['ff_uid'].drop_duplicates('ff_uid')
     goodUser = pd.DataFrame(columns = ['uid'])
     for uid in uids:

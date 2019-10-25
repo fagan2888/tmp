@@ -66,11 +66,13 @@ db_macro_factor_uri = 'mysql://finance:lk8sge9jcdhw@192.168.88.17/lcmf_wind?char
 db_finance_uri = 'mysql://yangning:yangning20d@11024950@192.168.88.254/finance?charset=utf8&use_unicode=1'
 #db_mofang_uri = 'mysql://zhaoliyuan:zhaoliyuan20d@1101075@192.168.88.254/mofang?charset=utf8&use_unicode=1'
 #db_asset_allocation_uri = 'mysql://zhaoliyuan:zhaoliyuan20d@1101075@192.168.88.254/asset_allocation?charset=utf8&use_unicode=1'
+db_prophet_uri = 'mysql://zhaoliyun:y+LjN98VPGSKayiiyFJ9WQ@rm-bp15sb1c9t277l882rw.mysql.rds.aliyuncs.com/prophet?charset=utf8&use_unicode=1'
 
 uris = {
     'asset': db_asset_uri,
     'base': db_base_uri,
     'caihui': db_caihui_uri,
+    'prophet': db_prophet_uri,
     #'portfolio_sta': db_portfolio_sta_uri,
     #'portfolio_sta': config.db_portfolio_sta_uri,
     #'mapi': db_mapi_uri,

@@ -4,13 +4,13 @@
 
 import pandas as pd
 from sqlalchemy import *
-from sqlalchemy.orm import sessinmaker
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import sys
 sys.path.append('../shell')
 from config import uris
 
-def toSQL(key = 'base'):
+def toSQL(key):
     
     # connect to database
     if key in uris.keys():
@@ -28,7 +28,7 @@ def toSQL(key = 'base'):
     return sql
 
 
-def toDf(key = 'base', sql, parse_dates):
+def toDf(key, sql, parse_dates):
 
     # connect to database
     if key in uris.keys():
@@ -41,7 +41,7 @@ def toDf(key = 'base', sql, parse_dates):
     if parse_dates:
         df = pd.read_sql(sql, engine, parse_dates = dates)
     else:
-        df = pd,read_sql(sql, engine)
+        df = pd.read_sql(sql, engine)
 
     return df
 
