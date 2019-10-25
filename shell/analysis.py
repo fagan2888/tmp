@@ -57,6 +57,7 @@ goodID = goodUser()
 
 #
 df = pd.read_excel('output.xlsx', index_col = 0, sheet_name = 1)
+df = df[df['uid'].isin(goodID)]
 print(df)
 set_trace()
 
