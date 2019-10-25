@@ -57,8 +57,9 @@ goodID = goodUser()
 
 #
 df = pd.read_excel('output.xlsx', index_col = 0, sheet_name = 1)
-df = df[df['uid'].isin(goodID)]
+df = df[df.index.isin(goodID)]
 print(df)
+df.to_excel('outputGoodUsers.xlsx')
 set_trace()
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
