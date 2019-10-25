@@ -39,9 +39,9 @@ class prophet_family_fee(Base):
 # if all needs of a user can be fullfilled then the user is a good user
 # ff_age = -1 means that the need  cannot be realized
 def goodUser():
-    sql = toSQL('asset')
+    sql = toSQL('prophet')
     sql = sql.query(prophet_family_fee.ff_uid).filter(prophet_family_fee.ff_age != -1).statement
-    df = toDf(key = 'asset', sql = sql, parse_dates = '')
+    df = toDf(key = 'prophet', sql = sql, parse_dates = '')
     uids = df['ff_uid'].drop_duplicates('ff_uid')
     goodUser = pd.DataFrame(columns = ['uid'])
     for uid in uids:
