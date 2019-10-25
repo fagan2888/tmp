@@ -10,7 +10,7 @@ from ipdb import set_trace
 import statsmodels.api as sm
 from sqlhelper import batch
 from sqlhelper.tableToDataframe import toSQL, toDf
-
+import loadData
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
-class prophet_family_fee(Base):
+class prophet_family_free(Base):
     
-    __tablename__  = 'prophet_family_fee'
+    __tablename__  = 'prophet_family_free'
 
     id = Column(Integer, primary_key = True)
     ff_uid = Column(String)
@@ -40,20 +40,24 @@ class prophet_family_fee(Base):
 # ff_age = -1 means that the need  cannot be realized
 def goodUser():
     sql = toSQL('prophet')
-    sql = sql.query(prophet_family_fee.ff_uid).filter(prophet_family_fee.ff_age != -1).statement
+    sql = sql.query(prophet_family_free.ff_uid, prophet_family_free.ff_age, prophet_family_free.ff_batch_id, prophet_family_free.created_at).statement
     df = toDf(key = 'prophet', sql = sql, parse_dates = '')
-    uids = df['ff_uid'].drop_duplicates('ff_uid')
-    goodUser = pd.DataFrame(columns = ['uid'])
-    for uid in uids:
-        tmp = df[df['ff_uid']==uid].sort_values(by = 'created_at', ascending = False)
-        tmp = tmp.iloc[0]
-        tmp = tmp['ff_uid']
-        goodUser = pd.concat(goodUser, tmp, axis = 0)
+    df.sort_values(by = 'created_at', ascending = False, inplace = True)
+    df.drop_duplicates(subset = ['ff_uid','ff_batch_id'], keep = 'first', inplace = True)
+    uids = df[['ff_uid']].drop_duplicates('ff_uid',keep = 'first')
+    goodUser = list()
+    for uid in uids['ff_uid']:
+        tmp = df[df['ff_uid']==uid]
+        if (tmp['ff_age'] != -1).all():    
+            goodUser.append(uid)
 
     return goodUser
 
-users = goodUser()
-print(len(users))
+goodID = goodUser()
+
+#
+df = pd.read_excel('output.xlsx', index_col = 0, sheet_name = 1)
+print(df)
 set_trace()
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
