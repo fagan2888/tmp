@@ -95,46 +95,57 @@ def ratio(df, step, column = 'age'):
 #df.to_excel('outputGoodUsers.xlsx')
 #
 
-df = pd.read_excel('outputGoodUsers.xlsx', sheet_name = 0)
-dfAll = df[['age','income','expenditure']]
-dfAdjusted = pd.DataFrame(columns = ['age','income','expenditure'])
-ageMin = dfAll.age.min()
-for age in range(ageMin,86):
-    df = dfAll[dfAll['age'] == age]
-    df = group(df, 'income', 100000).groupby('group').mean()
-    df['age'] = age
-    dfAdjusted = pd.concat([dfAdjusted, df], axis = 0)
+#df = pd.read_excel('outputGoodUsers.xlsx', sheet_name = 0)
+#dfAll = df[['age','income','expenditure']]
+#dfAdjusted = pd.DataFrame(columns = ['age','income','expenditure'])
+#ageMin = dfAll.age.min()
+#for age in range(ageMin,86):
+#    df = dfAll[dfAll['age'] == age]
+#    df = group(df, 'income', 100000).groupby('group').mean()
+#    df['age'] = age
+#    dfAdjusted = pd.concat([dfAdjusted, df], axis = 0)
+#
+#ratioOneYear = ratio(dfAdjusted, step = 1)
+#ratioTwoYear = ratio(dfAdjusted, step = 2)
+#ratioThreeYear = ratio(dfAdjusted, step = 3)
+#ratioFourYear = ratio(dfAdjusted, step = 4)
+#ratioFiveYear = ratio(dfAdjusted, step = 5)
+#ratioSixYear = ratio(dfAdjusted, step = 6)
+#ratioSevenYear = ratio(dfAdjusted, step = 7)
+#ratioEightYear = ratio(dfAdjusted, step = 8)
+#ratioNineYear = ratio(dfAdjusted, step = 9)
+#ratioTenYear = ratio(dfAdjusted, step = 10)
+#
+#dfAdjusted['ratioOneYear'] = ratioOneYear
+#dfAdjusted['ratioTwoYear'] = ratioTwoYear
+#dfAdjusted['ratioThreeYear'] = ratioThreeYear
+#dfAdjusted['ratioFourYear'] = ratioFourYear 
+#dfAdjusted['ratioFiveYear'] = ratioFiveYear 
+#dfAdjusted['ratioSixYear'] = ratioSixYear
+#dfAdjusted['ratioSevenYear'] = ratioSevenYear
+#dfAdjusted['ratioEightYear'] = ratioEightYear
+#dfAdjusted['ratioNineYear'] = ratioNineYear 
+#dfAdjusted['ratioTenYear'] = ratioTenYear
+#
+#dfAdjusted.to_excel('outputGoodUsersGroupedbyIncome.xlsx')
 
-ratioOneYear = ratio(dfAdjusted, step = 1)
-ratioTwoYear = ratio(dfAdjusted, step = 2)
-ratioThreeYear = ratio(dfAdjusted, step = 3)
-ratioFourYear = ratio(dfAdjusted, step = 4)
-ratioFiveYear = ratio(dfAdjusted, step = 5)
-ratioSixYear = ratio(dfAdjusted, step = 6)
-ratioSevenYear = ratio(dfAdjusted, step = 7)
-ratioEightYear = ratio(dfAdjusted, step = 8)
-ratioNineYear = ratio(dfAdjusted, step = 9)
-ratioTenYear = ratio(dfAdjusted, step = 10)
+df = pd.read_excel('outputGoodUsersGroupedbyIncome.xlsx', sheet_name = 0, index_col = 0)
+df = df[df['income']<10000000]
+df = df[df['expenditure']<2000000]
+df.sort_values('age', ascending = True, inplace = True)
+oneThree = []
+threeTen = []
+for i in range(len(df)):
+    oneThree.append(df['ratioOneYear'].iloc[i]/df['ratioThreeYear'].iloc[i])
+    threeTen.append(df['ratioThreeYear'].iloc[i]/df['ratioTenYear'].iloc[i])
 
-dfAdjusted['ratioOneYear'] = ratioOneYear
-dfAdjusted['ratioTwoYear'] = ratioTwoYear
-dfAdjusted['ratioThreeYear'] = ratioThreeYear
-dfAdjusted['ratioFourYear'] = ratioFourYear 
-dfAdjusted['ratioFiveYear'] = ratioFiveYear 
-dfAdjusted['ratioSixYear'] = ratioSixYear
-dfAdjusted['ratioSevenYear'] = ratioSevenYear
-dfAdjusted['ratioEightYear'] = ratioEightYear
-dfAdjusted['ratioNineYear'] = ratioNineYear 
-dfAdjusted['ratioTenYear'] = ratioTenYear
+df['one/three'] = oneThree
+df['three/ten'] = threeTen
 
-print(dfAdjusted)
-set_trace()
-dfAdjusted.to_excel('outputGoodUsersGroupedbyIncome.xlsx')
-print('ok')
-set_trace()
+wellDf = df[['age', 'income', 'expenditure', 'one/three', 'three/ten']]
+wellDf = wellDf.reset_index(drop = True)
 
-
-
+wellDf.to_excel('well_done.xlsx')
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
 #df0 = df.copy()
