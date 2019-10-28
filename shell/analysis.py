@@ -129,23 +129,37 @@ def ratio(df, step, column = 'age'):
 #
 #dfAdjusted.to_excel('outputGoodUsersGroupedbyIncome.xlsx')
 
-df = pd.read_excel('outputGoodUsersGroupedbyIncome.xlsx', sheet_name = 0, index_col = 0)
-df = df[df['income']<10000000]
-df = df[df['expenditure']<2000000]
-df.sort_values('age', ascending = True, inplace = True)
-oneThree = []
-threeTen = []
-for i in range(len(df)):
-    oneThree.append(df['ratioOneYear'].iloc[i]/df['ratioThreeYear'].iloc[i])
-    threeTen.append(df['ratioThreeYear'].iloc[i]/df['ratioTenYear'].iloc[i])
+#df = pd.read_excel('outputGoodUsersGroupedbyIncome.xlsx', sheet_name = 0, index_col = 0)
+#df = df[df['income']<10000000]
+#df = df[df['expenditure']<2000000]
+#df.sort_values('age', ascending = True, inplace = True)
+#oneThree = []
+#threeTen = []
+#for i in range(len(df)):
+#    oneThree.append(df['ratioOneYear'].iloc[i]/df['ratioThreeYear'].iloc[i])
+#    threeTen.append(df['ratioThreeYear'].iloc[i]/df['ratioTenYear'].iloc[i])
+#
+#df['one/three'] = oneThree
+#df['three/ten'] = threeTen
+#
+#wellDf = df[['age', 'income', 'expenditure', 'one/three', 'three/ten']]
+#wellDf = wellDf.reset_index(drop = True)
+#
+#wellDf.to_excel('well_done.xlsx')
 
-df['one/three'] = oneThree
-df['three/ten'] = threeTen
+df = pd.read_excel('well_done.xlsx', index_col = 0, sheet_name = 0)
+df1 = df[['age', 'expenditure', 'one/three', 'three/ten']].groupby('age').mean()
+df1 = df1.reset_index()
+df2 = df[['income', 'expenditure', 'one/three', 'three/ten']].groupby('income').mean()
+df2 = df2.reset_index()
+df3 = group(df2, 'income', 100000).groupby('group').mean()
 
-wellDf = df[['age', 'income', 'expenditure', 'one/three', 'three/ten']]
-wellDf = wellDf.reset_index(drop = True)
-
-wellDf.to_excel('well_done.xlsx')
+excel = pd.ExcelWriter('wellDone.xlsx')
+df.to_excel(excel, 'basicData')
+df1.to_excel(excel, 'avg-age')
+df2.to_excel(excel, 'avg-income')
+df3.to_excel(excel, 'avg-income-grouped')
+excel.save()
 
 #df = pd.read_excel('output.xlsx',index_col = 0, sheet_name = 0)
 #df0 = df.copy()
