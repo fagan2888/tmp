@@ -28,12 +28,13 @@ contourf(x,y,expenditure,'ShowText','on');
 X = linspace(10,80);
 Y = linspace(10^4,10^7);
 [x,y] = meshgrid(X,Y);
-oneThree = 0.0028*x + 1.077*10^(-9)*y+0.1878;
-
+%oneThree = 0.0028*x + 1.077*10^(-9)*y+0.1878;% 这是全量数据
+oneThree = 0.0031*x + 1.216*10^(-9)*y+0.1753; % 这是优质用户
 contourf(x,y,oneThree,'ShowText','on');
 
 X = linspace(10,80);
 Y = linspace(10^4,10^7);
 [x,y] = meshgrid(X,Y);
-threeTen = 0.0065*x + 2.346*10^-9*y-0.0172;
+%threeTen = 0.0065*x + 2.346*10^-9*y-0.0172; % 这是全量数据
+threeTen = 0.0070*x + 3.341*10^-9*y-0.0383; % 这是优质用户
 contourf(x,y,threeTen,'ShowText','on');

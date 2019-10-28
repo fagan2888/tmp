@@ -49,6 +49,8 @@ df = pd.read_excel('niceDataAdjustedNoNoise.xlsx',index_col =0 , sheet_name = 0)
 
 df = pd.read_excel('niceDataAdjustedNoNoise100.xlsx',index_col =0 , sheet_name = 0)
 
+df = pd.read_excel('wellDone.xlsx',index_col =0 , sheet_name = 'basicData')
+
 # 分析年龄，收入和支出
 X1 = df[['age','income']].values
 y1 = df['expenditure'].values
@@ -65,7 +67,7 @@ print(result2.params)
 print(result2.summary())
 
 # 分析年龄，收入和支出比例
-
+df = df[df['age']<70]
 X2_1 = df[['age','income']].values
 y2_1 = df['one/three'].values
 model2_1 = sm.OLS(y2_1,sm.add_constant(X2_1))
@@ -73,7 +75,7 @@ result2_1 = model2_1.fit()
 print(result2_1.params)
 print(result2_1.summary())
 
-X2_2 = df[['age'，'income']].values
+X2_2 = df[['age','income']].values
 
 df = df[df['age']>=55]
 X2_2 = df[['age']].values
