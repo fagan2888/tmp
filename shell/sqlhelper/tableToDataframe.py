@@ -28,7 +28,7 @@ def toSQL(key):
     return sql
 
 
-def toDf(key, sql, parse_dates):
+def toDf(key, sql, parse_dates = ''):
 
     # connect to database
     if key in uris.keys():
