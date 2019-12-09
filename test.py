@@ -26,3 +26,10 @@ print(ord('+'))
 print(ord('＋'))
 print(ord('-'))
 print(ord('－'))
+
+a = pd.DataFrame({'a':[1,2,3], 'b':[3,4,5], 'c':[4,5,6], 'd':[5,6,7]})
+print(a)
+b = a.set_index(['a','c']).unstack()['b']
+print(b)
+c = a.set_index('b').unstack()
+print(c)
