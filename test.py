@@ -3,6 +3,8 @@ import pandas as pd
 
 from ipdb import set_trace
 
+from multiprocessing import Process
+
 #for i in range(3):
 #    print(i)
 #set_trace()
@@ -33,3 +35,15 @@ b = a.set_index(['a','c']).unstack()['b']
 print(b)
 c = a.set_index('b').unstack()
 print(c)
+
+def test(a):
+    print('hello world', a)
+
+def test2():
+    print('hello there')
+
+if __name__ == '__main__':
+    p1 = Process(target = test, args = (1,))
+    p2 = Process(target = test2)
+    p1.start()
+    p2.start()
