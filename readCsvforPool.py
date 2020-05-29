@@ -14,8 +14,12 @@ def defaultDate():
 
 
 def do(filename, day, why):
-    df = pd.read_excel(filename, sheet_name = 0)
-    df = df[['基金池','操作','基金']].dropna(axis =0, how = 'any')
+    df = pd.read_excel(filename,index_col = 0, header = 1)
+    print(df)
+    set_trace()
+    #df = pd.read_csv(filename)
+    df = df[['pool','op','code']].dropna(axis =0, how = 'any')
+    df.columns = ['基金池','操作','基金']
     df['基金池'] = df['基金池'].apply(lambda x: str(int(x)))
     df['基金'] = df['基金'].apply(lambda x: str(int(x)).zfill(6))
     df = df[df['操作']!='']
@@ -36,12 +40,15 @@ def do(filename, day, why):
     dfNew['code'] = df['基金']
     dfNew['why'] = why
     dfNew.set_index('pool', inplace = True)
-    name = 'zhaoliyuan@patch-'+date.today().strftime('%Y-%m-%d')+'.csv'
+    name = 'songbaifeng@patch-'+date.today().strftime('%Y-%m-%d')+'.csv'
+    print(dfNew)
+    set_trace()
     dfNew.to_csv(name) 
 
 
 if __name__ == '__main__':
     day = defaultDate()
     name = 'new.xlsx'
+    #name = 'new.csv'
     why = '"'*3 + '定期更换基金池' + '"'*3
     do(filename = name, day = day, why = why)
